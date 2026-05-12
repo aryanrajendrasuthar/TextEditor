@@ -22,6 +22,7 @@ public class LineNumberPanel extends JPanel implements DocumentListener {
         this.scheme   = scheme;
 
         setOpaque(true);
+        setBackground(scheme.lineNumberBg);
         setFont(new Font(Font.MONOSPACED, Font.PLAIN, textPane.getFont().getSize()));
 
         textPane.getDocument().addDocumentListener(this);
@@ -38,13 +39,14 @@ public class LineNumberPanel extends JPanel implements DocumentListener {
 
     public void setColorScheme(ColorScheme scheme) {
         this.scheme = scheme;
+        setBackground(scheme.lineNumberBg);
         repaint();
     }
 
     // ── DocumentListener ─────────────────────────────────────────────────────
 
-    @Override public void insertUpdate(DocumentEvent e)  { repaint(); }
-    @Override public void removeUpdate(DocumentEvent e)  { repaint(); }
+    @Override public void insertUpdate(DocumentEvent e)  { refreshWidth(); repaint(); }
+    @Override public void removeUpdate(DocumentEvent e)  { refreshWidth(); repaint(); }
     @Override public void changedUpdate(DocumentEvent e) { /* style, ignore */ }
 
     // ── painting ─────────────────────────────────────────────────────────────
@@ -58,7 +60,6 @@ public class LineNumberPanel extends JPanel implements DocumentListener {
                             RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g2.setFont(getFont());
 
-        setBackground(scheme.lineNumberBg);
         g2.setColor(scheme.lineNumberBg);
         g2.fillRect(0, 0, getWidth(), getHeight());
 
@@ -91,8 +92,6 @@ public class LineNumberPanel extends JPanel implements DocumentListener {
         // right separator line
         g2.setColor(scheme.lineNumberFg);
         g2.drawLine(getWidth() - 1, 0, getWidth() - 1, getHeight());
-
-        refreshWidth();
     }
 
     private void refreshWidth() {

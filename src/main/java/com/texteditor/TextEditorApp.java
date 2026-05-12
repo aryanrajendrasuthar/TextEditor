@@ -49,9 +49,6 @@ public class TextEditorApp extends JFrame {
         // ── menu bar ─────────────────────────────────────────────────────────
         setJMenuBar(buildMenuBar());
 
-        // ── keyboard shortcuts ────────────────────────────────────────────────
-        bindKeys();
-
         // ── frame setup ───────────────────────────────────────────────────────
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
@@ -155,31 +152,6 @@ public class TextEditorApp extends JFrame {
         if (ks != null) item.setAccelerator(ks);
         item.addActionListener(al);
         return item;
-    }
-
-    // ── key bindings (in addition to menu accelerators) ───────────────────────
-
-    private void bindKeys() {
-        JRootPane rp    = getRootPane();
-        int       ctrl  = InputEvent.CTRL_DOWN_MASK;
-        int       shift = InputEvent.SHIFT_DOWN_MASK;
-
-        bind(rp, KeyStroke.getKeyStroke(KeyEvent.VK_N, ctrl),       "new",      e -> fileNew());
-        bind(rp, KeyStroke.getKeyStroke(KeyEvent.VK_O, ctrl),       "open",     e -> fileOpen());
-        bind(rp, KeyStroke.getKeyStroke(KeyEvent.VK_S, ctrl),       "save",     e -> fileSave());
-        bind(rp, KeyStroke.getKeyStroke(KeyEvent.VK_S, ctrl|shift), "saveas",   e -> fileSaveAs());
-        bind(rp, KeyStroke.getKeyStroke(KeyEvent.VK_Z, ctrl),       "undo",     e -> undo());
-        bind(rp, KeyStroke.getKeyStroke(KeyEvent.VK_Y, ctrl),       "redo",     e -> redo());
-        bind(rp, KeyStroke.getKeyStroke(KeyEvent.VK_F, ctrl),       "find",     e -> showFind());
-        bind(rp, KeyStroke.getKeyStroke(KeyEvent.VK_H, ctrl),       "replace",  e -> showFind());
-    }
-
-    private void bind(JRootPane rp, KeyStroke ks, String name,
-                      java.awt.event.ActionListener al) {
-        rp.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(ks, name);
-        rp.getActionMap().put(name, new AbstractAction() {
-            @Override public void actionPerformed(java.awt.event.ActionEvent e) { al.actionPerformed(e); }
-        });
     }
 
     // ── actions ───────────────────────────────────────────────────────────────

@@ -146,6 +146,11 @@ public class EditorPanel extends JPanel {
 
     private void handleEnter() {
         try {
+            // discard any selected text first (mirrors default Enter behavior)
+            if (textPane.getSelectedText() != null) {
+                textPane.replaceSelection("");
+            }
+
             int    caret  = textPane.getCaretPosition();
             Element root  = textPane.getDocument().getDefaultRootElement();
             int    lineIdx = root.getElementIndex(caret);
@@ -180,6 +185,15 @@ public class EditorPanel extends JPanel {
                         open + sel + close, null);
                 textPane.setCaretPosition(start + sel.length() + 1);
             } else {
+                // for quotes: if next char is already the close char, skip over it
+                int docLen = textPane.getDocument().getLength();
+                if (open == close && caret < docLen) {
+                    char nextChar = textPane.getDocument().getText(caret, 1).charAt(0);
+                    if (nextChar == close) {
+                        textPane.setCaretPosition(caret + 1);
+                        return;
+                    }
+                }
                 textPane.getDocument().insertString(caret,
                         String.valueOf(open) + close, null);
                 textPane.setCaretPosition(caret + 1);
